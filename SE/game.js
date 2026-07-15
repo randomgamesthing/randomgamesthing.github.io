@@ -335,7 +335,7 @@
     requestAnimationFrame(loop);
   }
 
-  // ---------------- Jumpscare scheduler: 1 in 10,000 chance every millisecond ----------------
+  // ---------------- Jumpscare scheduler: 1 in 1,000,000 chance every millisecond ----------------
   let scareInterval = null;
   let scareActive = false;
 
@@ -349,7 +349,7 @@
   function startScareScheduler() {
     scareInterval = setInterval(() => {
       if (!running) return;
-      if (Math.random() < 1 / 10000) {
+      if (Math.random() < 1 / 1000000) {
         triggerJumpscareGuarded();
       }
     }, 1);
