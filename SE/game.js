@@ -140,11 +140,11 @@
     }
   }
 
-// ---------------- Trees ----------------
-  const TREE_GRID = TILE * 10
-  const TREE_CHANCE = 0.03;
-  const TREE_COLLISION_RADIUS = 40;
-  const TREE_DRAW_SCALE = 0.8;
+  // ---------------- Trees (sparse, solid obstacles) ----------------
+  const TREE_GRID = TILE * 10;       // spacing between candidate slots - large = sparse
+  const TREE_CHANCE = 0.035;         // chance a given slot actually has a tree - keep this low
+  const TREE_COLLISION_RADIUS = 34;  // px around the trunk that blocks movement
+  const TREE_DRAW_SCALE = 1.4;       // trees render big
 
   // Deterministic per-slot presence + jitter, so trees don't move between frames.
   function treeSlot(gx, gy) {
