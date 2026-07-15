@@ -141,7 +141,7 @@
   }
 
 // ---------------- Trees ----------------
-  const TREE_GRID = TILE * 9.5
+  const TREE_GRID = TILE * 10
   const TREE_CHANCE = 0.5;
   const TREE_COLLISION_RADIUS = 45;
   const TREE_DRAW_SCALE = 1.2;
