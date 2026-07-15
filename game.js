@@ -64,24 +64,26 @@
     y: 0,
     speed: 1.35,        // slow walking speed, px per frame at ~60fps
     facing: 'stand',
+    facingDir: 1,
     walkFrame: 'walkA',
     walkTimer: 0,
     moving: false
   };
 
-  const keys = { up: false, down: false, right: false };
+  const keys = { up: false, down: false, left: false, right: false };
 
   window.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowUp') { keys.up = true; e.preventDefault(); }
     else if (e.key === 'ArrowDown') { keys.down = true; e.preventDefault(); }
     else if (e.key === 'ArrowRight') { keys.right = true; e.preventDefault(); }
-    else if (e.key === 'ArrowLeft') { e.preventDefault(); /* left does not exist here */ }
+    else if (e.key === 'ArrowLeft') { keys.left = true; e.preventDefault(); }
   }, { passive: false });
 
   window.addEventListener('keyup', (e) => {
     if (e.key === 'ArrowUp') keys.up = false;
     else if (e.key === 'ArrowDown') keys.down = false;
     else if (e.key === 'ArrowRight') keys.right = false;
+    else if (e.key === 'ArrowLeft') keys.left = false;
   });
 
   // ---------------- Procedural grass field ----------------
@@ -184,7 +186,17 @@
     const h = img.naturalHeight * SPRITE_SCALE;
     const dx = canvas.width / 2 - w / 2;
     const dy = canvas.height / 2 - h / 2;
-    ctx.drawImage(img, dx, dy, w, h);
+
+    if (player.facingDir === -1) {
+      ctx.save();
+      ctx.translate(canvas.width / 2, 0);
+      ctx.scale(-1, 1);
+      ctx.translate(-canvas.width / 2, 0);
+      ctx.drawImage(img, dx, dy, w, h);
+      ctx.restore();
+    } else {
+      ctx.drawImage(img, dx, dy, w, h);
+    }
   }
 
   // ---------------- Update ----------------
@@ -195,6 +207,9 @@
     if (keys.up) dy -= 1;
     if (keys.down) dy += 1;
     if (keys.right) dx += 1;
+    if (keys.left) dx -= 1;
+
+    if (dx !== 0) player.facingDir = dx > 0 ? 1 : -1;
 
     const moving = dx !== 0 || dy !== 0;
     player.moving = moving;
