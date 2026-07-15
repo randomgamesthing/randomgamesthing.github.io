@@ -35,6 +35,11 @@
     spriteImages[key] = img;
   });
 
+  // ---------------- Tree (world obstacle) ----------------
+  const treeImage = new Image();
+  treeImage.crossOrigin = 'anonymous';
+  treeImage.src = 'https://randomgamesthing.github.io/SE/t.png';
+
   // ---------------- Jumpscare images ----------------
   const SCARE_URLS = [
     'https://pleated-jeans.com/wp-content/uploads/2023/11/weird-liminal-spaces-pictures-2.jpg',
@@ -135,6 +140,76 @@
     }
   }
 
+  // ---------------- Trees (sparse, solid obstacles) ----------------
+  const TREE_GRID = TILE * 10;       // spacing between candidate slots - large = sparse
+  const TREE_CHANCE = 0.035;         // chance a given slot actually has a tree - keep this low
+  const TREE_COLLISION_RADIUS = 34;  // px around the trunk that blocks movement
+  const TREE_DRAW_SCALE = 1.4;       // trees render big
+
+  // Deterministic per-slot presence + jitter, so trees don't move between frames.
+  function treeSlot(gx, gy) {
+    const presence = hash(gx * 91.7 + 13.3, gy * 57.3 + 7.1);
+    if (presence <= 1 - TREE_CHANCE) return null;
+    const jx = hash(gx * 3.3 + 1.7, gy * 5.1 + 2.9);
+    const jy = hash(gx * 7.7 + 3.1, gy * 2.9 + 4.4);
+    return {
+      x: gx * TREE_GRID + jx * TREE_GRID,
+      y: gy * TREE_GRID + jy * TREE_GRID
+    };
+  }
+
+  function nearbyTrees(worldX, worldY, cellRadius = 2) {
+    const cgx = Math.floor(worldX / TREE_GRID);
+    const cgy = Math.floor(worldY / TREE_GRID);
+    const found = [];
+    for (let gy = cgy - cellRadius; gy <= cgy + cellRadius; gy++) {
+      for (let gx = cgx - cellRadius; gx <= cgx + cellRadius; gx++) {
+        const t = treeSlot(gx, gy);
+        if (t) found.push(t);
+      }
+    }
+    return found;
+  }
+
+  function treesInView(camX, camY) {
+    const buffer = TILE * 6; // trees are large, so pad the visibility check
+    const startGX = Math.floor((camX - buffer) / TREE_GRID) - 1;
+    const endGX = Math.floor((camX + canvas.width + buffer) / TREE_GRID) + 1;
+    const startGY = Math.floor((camY - buffer) / TREE_GRID) - 1;
+    const endGY = Math.floor((camY + canvas.height + buffer) / TREE_GRID) + 1;
+    const found = [];
+    for (let gy = startGY; gy <= endGY; gy++) {
+      for (let gx = startGX; gx <= endGX; gx++) {
+        const t = treeSlot(gx, gy);
+        if (t) found.push(t);
+      }
+    }
+    return found;
+  }
+
+  function canOccupy(x, y) {
+    const trees = nearbyTrees(x, y);
+    for (const t of trees) {
+      const dx = x - t.x;
+      const dy = y - t.y;
+      if (dx * dx + dy * dy < TREE_COLLISION_RADIUS * TREE_COLLISION_RADIUS) return false;
+    }
+    return true;
+  }
+
+  function drawTree(t, camX, camY) {
+    if (!treeImage.complete || treeImage.naturalWidth === 0) return;
+    const w = treeImage.naturalWidth * TREE_DRAW_SCALE;
+    const h = treeImage.naturalHeight * TREE_DRAW_SCALE;
+    const sx = t.x - camX - w / 2;
+    const sy = t.y - camY - h; // anchor trunk base at t.y, tree grows upward from there
+    ctx.drawImage(treeImage, sx, sy, w, h);
+  }
+
+  function drawTreesLayer(camX, camY, trees) {
+    trees.forEach(t => drawTree(t, camX, camY));
+  }
+
   // ---------------- Fog layers ----------------
   let fogTime = 0;
 
@@ -216,8 +291,15 @@
 
     if (moving) {
       const len = Math.sqrt(dx * dx + dy * dy) || 1;
-      player.x += (dx / len) * player.speed;
-      player.y += (dy / len) * player.speed;
+      const stepX = (dx / len) * player.speed;
+      const stepY = (dy / len) * player.speed;
+
+      const nx = player.x + stepX;
+      const ny = player.y + stepY;
+
+      // per-axis collision so the player slides along a tree instead of stopping dead
+      if (canOccupy(nx, player.y)) player.x = nx;
+      if (canOccupy(player.x, ny)) player.y = ny;
 
       player.walkTimer += dt;
       const frameInterval = 220; // ms per frame swap, matches slow walk speed
@@ -242,7 +324,17 @@
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawWorld();
+
+    const camX = player.x - canvas.width / 2;
+    const camY = player.y - canvas.height / 2;
+    const trees = treesInView(camX, camY);
+    const behindPlayer = trees.filter(t => t.y <= player.y);
+    const inFrontOfPlayer = trees.filter(t => t.y > player.y);
+
+    drawTreesLayer(camX, camY, behindPlayer);
     drawPlayer();
+    drawTreesLayer(camX, camY, inFrontOfPlayer);
+
     drawFog();
 
     requestAnimationFrame(loop);
