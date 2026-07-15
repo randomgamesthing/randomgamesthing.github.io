@@ -141,10 +141,10 @@
   }
 
 // ---------------- Trees ----------------
-  const TREE_GRID = TILE * 9;
+  const TREE_GRID = TILE * 10
   const TREE_CHANCE = 0.035;
-  const TREE_COLLISION_RADIUS = 50;
-  const TREE_DRAW_SCALE = 1.4;
+  const TREE_COLLISION_RADIUS = 40;
+  const TREE_DRAW_SCALE = 1;
 
   // Deterministic per-slot presence + jitter, so trees don't move between frames.
   function treeSlot(gx, gy) {
