@@ -42,14 +42,8 @@
 
   // ---------------- Jumpscare images ----------------
   const SCARE_URLS = [
-    'https://pleated-jeans.com/wp-content/uploads/2023/11/weird-liminal-spaces-pictures-2.jpg',
-    'https://pleated-jeans.com/wp-content/uploads/2023/11/weird-liminal-spaces-pictures-4.jpg',
-    'https://pleated-jeans.com/wp-content/uploads/2023/11/weird-liminal-spaces-pictures-9.jpg',
-    'https://i.namu.wiki/i/NXHbjabm_N-gT1Krs5NrrMGIjRGWgcu2v_igZcWAI9HMySHOHQ-ncMY5n7sT-XS7MsYL_jTOaiJQLlaU2JNvMX5TKZcWu5E9t719Nrll6FW0TU6bp1f2cBC_hSktzFifAUaO0jRyKnH3dSQVUB5asA.webp',
-    'https://i.namu.wiki/i/SW0vtKQgEW4dBabZP_BzljIc7pENDwUY8gLuK9weUKJ3VQW4BQMDLE8wk4hVzckARdLR4TkKNaJvXJAbxhH6iPksz2OBhpyT-zDx7znMIwMX4J4n2jf4dmy7xIRo1f-wxVzd0fp9eKpothw5jGz0Rg.webp',
-    'https://i.namu.wiki/i/Kp8ool6ptCTKMn2Azr5qCk9mXxzJdPmp_cQ-PPHft5iaQXRI1fcxyVzZISVOgAvUe0QEHkMQ25HM7Y2nA0KefB-DpN7HjtFa5G21iJGETQAnQmME0X7VtUUtr6sE9ucdrMiKnFwINjBwojHc4eVtAg.webp',
-    'https://i.namu.wiki/i/muN6XKmWB9IOCCsrU717rxHocL6QTVktnmhV23PtnEUu5VjAQmDW6KJg8-CX5RarWygzNFE3fSkFHdolNRaVuRe2iq47OxluucQVHvHS43opVgNU2HjmmwtU4ZvuyfscboprUFeTkIVwJ4cuwXE2XQ.webp',
-    'https://static.wikia.nocookie.net/backrooms-freewriting/images/f/f7/The_Creature_of_the_Fog.jpg/revision/latest?cb=20250419103630'
+    'https://randomgamesthing.github.io/SE/aaaa.png',
+    'https://randomgamesthing.github.io/SE/aaaaa.png'
   ];
   SCARE_URLS.forEach(url => { const i = new Image(); i.crossOrigin = 'anonymous'; i.src = url; });
 
