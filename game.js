@@ -169,7 +169,7 @@
   }
 
   // ---------------- Player draw ----------------
-  const SPRITE_SCALE = 1.2;
+  const SPRITE_SCALE = 0.65;
 
   function drawPlayer() {
     let img;
