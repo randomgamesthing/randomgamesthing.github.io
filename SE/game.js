@@ -141,8 +141,8 @@
   }
 
   // ---------------- Trees (sparse, solid obstacles) ----------------
-  const TREE_GRID = TILE * 10;       // spacing between candidate slots - large = sparse
-  const TREE_CHANCE = 0.035;         // chance a given slot actually has a tree - keep this low
+  const TREE_GRID = TILE * 8;       // spacing between candidate slots - large = sparse
+  const TREE_CHANCE = 0.9;         // chance a given slot actually has a tree
   const TREE_COLLISION_RADIUS = 34;  // px around the trunk that blocks movement
   const TREE_DRAW_SCALE = 1.4;       // trees render big
 
