@@ -253,7 +253,7 @@
   function startScareScheduler() {
     scareInterval = setInterval(() => {
       if (!running) return;
-      if (Math.random() < 1 / 10000) {
+      if (Math.random() < 1 / 1000) {
         triggerJumpscare();
       }
     }, 1000);
