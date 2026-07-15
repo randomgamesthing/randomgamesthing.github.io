@@ -43,7 +43,8 @@
   // ---------------- Jumpscare images ----------------
   const SCARE_URLS = [
     'https://randomgamesthing.github.io/SE/aaaa.png',
-    'https://randomgamesthing.github.io/SE/aaaaa.png'
+    'https://randomgamesthing.github.io/SE/aaaaa.png',
+    'https://randomgamesthing.github.io/SE/aaa.png'
   ];
   SCARE_URLS.forEach(url => { const i = new Image(); i.crossOrigin = 'anonymous'; i.src = url; });
 
