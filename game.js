@@ -248,15 +248,24 @@
     requestAnimationFrame(loop);
   }
 
-  // ---------------- Jumpscare scheduler: ~1 in 10,000 chance every second ----------------
+  // ---------------- Jumpscare scheduler: 1 in 10,000 chance every millisecond ----------------
   let scareInterval = null;
+  let scareActive = false;
+
+  function triggerJumpscareGuarded() {
+    if (scareActive) return;
+    scareActive = true;
+    triggerJumpscare();
+    setTimeout(() => { scareActive = false; }, 500);
+  }
+
   function startScareScheduler() {
     scareInterval = setInterval(() => {
       if (!running) return;
-      if (Math.random() < 1 / 1000) {
-        triggerJumpscare();
+      if (Math.random() < 1 / 10000) {
+        triggerJumpscareGuarded();
       }
-    }, 1000);
+    }, 1);
   }
 
   // ---------------- Start ----------------
